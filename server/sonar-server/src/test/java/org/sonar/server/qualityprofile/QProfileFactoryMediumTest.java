@@ -30,6 +30,8 @@ import org.sonar.api.server.rule.RuleParamType;
 import org.sonar.db.DbClient;
 import org.sonar.db.DbSession;
 import org.sonar.db.RowNotFoundException;
+import org.sonar.db.organization.OrganizationDto;
+import org.sonar.db.organization.OrganizationTesting;
 import org.sonar.db.qualityprofile.QualityProfileDto;
 import org.sonar.db.rule.RuleDto;
 import org.sonar.db.rule.RuleParamDto;
@@ -65,6 +67,7 @@ public class QProfileFactoryMediumTest {
   ActiveRuleIndexer activeRuleIndexer;
   RuleIndexer ruleIndexer;
   QProfileFactory factory;
+  private OrganizationDto organization = OrganizationTesting.newOrganizationDto();
 
   @Before
   public void before() {
@@ -84,38 +87,45 @@ public class QProfileFactoryMediumTest {
 
   @Test
   public void create() {
-    QualityProfileDto dto = factory.create(dbSession, new QProfileName("xoo", "P1"));
+    String uuid = organization.getUuid();
+
+    QualityProfileDto writtenDto = factory.create(dbSession, uuid, new QProfileName("xoo", "P1"));
     dbSession.commit();
     dbSession.clearCache();
-    assertThat(dto.getKey()).startsWith("xoo-p1-");
-    assertThat(dto.getName()).isEqualTo("P1");
-    assertThat(dto.getLanguage()).isEqualTo("xoo");
-    assertThat(dto.getId()).isNotNull();
+    assertThat(writtenDto.getOrganizationUuid()).isEqualTo(uuid);
+    assertThat(writtenDto.getKey()).startsWith("xoo-p1-");
+    assertThat(writtenDto.getName()).isEqualTo("P1");
+    assertThat(writtenDto.getLanguage()).isEqualTo("xoo");
+    assertThat(writtenDto.getId()).isNotNull();
 
     // reload the dto
-    dto = db.qualityProfileDao().selectByNameAndLanguage("P1", "xoo", dbSession);
-    assertThat(dto.getLanguage()).isEqualTo("xoo");
-    assertThat(dto.getName()).isEqualTo("P1");
-    assertThat(dto.getKey()).startsWith("xoo-p1");
-    assertThat(dto.getId()).isNotNull();
-    assertThat(dto.getParentKee()).isNull();
+    QualityProfileDto readDto = db.qualityProfileDao().selectByNameAndLanguage("P1", "xoo", dbSession);
+    assertThat(readDto.getOrganizationUuid()).isEqualTo(uuid);
+    assertThat(readDto.getName()).isEqualTo("P1");
+    assertThat(readDto.getKey()).startsWith("xoo-p1");
+    assertThat(readDto.getLanguage()).isEqualTo("xoo");
+    assertThat(readDto.getId()).isNotNull();
+    assertThat(readDto.getParentKee()).isNull();
 
     assertThat(db.qualityProfileDao().selectAll(dbSession)).hasSize(1);
   }
 
   @Test
-  public void fail_to_create_if_name_empty() {
+  public void fail_to_create_if_name_null() {
     QProfileName name = new QProfileName("xoo", null);
     try {
-      factory.create(dbSession, name);
+      factory.create(dbSession, organization.getUuid(), name);
       fail();
     } catch (BadRequestException e) {
       assertThat(e).hasMessage("quality_profiles.profile_name_cant_be_blank");
     }
+  }
 
-    name = new QProfileName("xoo", "");
+  @Test
+  public void fail_to_create_if_name_empty() {
+    QProfileName name = new QProfileName("xoo", "");
     try {
-      factory.create(dbSession, name);
+      factory.create(dbSession, organization.getUuid(), name);
       fail();
     } catch (BadRequestException e) {
       assertThat(e).hasMessage("quality_profiles.profile_name_cant_be_blank");
@@ -125,12 +135,12 @@ public class QProfileFactoryMediumTest {
   @Test
   public void fail_to_create_if_already_exists() {
     QProfileName name = new QProfileName("xoo", "P1");
-    factory.create(dbSession, name);
+    factory.create(dbSession, organization.getUuid(), name);
     dbSession.commit();
     dbSession.clearCache();
 
     try {
-      factory.create(dbSession, name);
+      factory.create(dbSession, organization.getUuid(), name);
       fail();
     } catch (BadRequestException e) {
       assertThat(e).hasMessage("Quality profile already exists: {lang=xoo, name=P1}");
@@ -139,7 +149,7 @@ public class QProfileFactoryMediumTest {
 
   @Test
   public void rename() {
-    QualityProfileDto dto = factory.create(dbSession, new QProfileName("xoo", "P1"));
+    QualityProfileDto dto = factory.create(dbSession, organization.getUuid(), new QProfileName("xoo", "P1"));
     dbSession.commit();
     dbSession.clearCache();
     String key = dto.getKey();
@@ -148,13 +158,14 @@ public class QProfileFactoryMediumTest {
     dbSession.clearCache();
 
     QualityProfileDto reloaded = db.qualityProfileDao().selectByKey(dbSession, dto.getKee());
+    assertThat(reloaded.getOrganizationUuid()).isEqualTo(organization.getUuid());
     assertThat(reloaded.getKey()).isEqualTo(key);
     assertThat(reloaded.getName()).isEqualTo("the new name");
   }
 
   @Test
   public void ignore_renaming_if_same_name() {
-    QualityProfileDto dto = factory.create(dbSession, new QProfileName("xoo", "P1"));
+    QualityProfileDto dto = factory.create(dbSession, organization.getUuid(), new QProfileName("xoo", "P1"));
     dbSession.commit();
     dbSession.clearCache();
     String key = dto.getKey();
@@ -163,13 +174,14 @@ public class QProfileFactoryMediumTest {
     dbSession.clearCache();
 
     QualityProfileDto reloaded = db.qualityProfileDao().selectByKey(dbSession, dto.getKee());
+    assertThat(reloaded.getOrganizationUuid()).isEqualTo(organization.getUuid());
     assertThat(reloaded.getKey()).isEqualTo(key);
     assertThat(reloaded.getName()).isEqualTo("P1");
   }
 
   @Test
   public void fail_if_blank_renaming() {
-    QualityProfileDto dto = factory.create(dbSession, new QProfileName("xoo", "P1"));
+    QualityProfileDto dto = factory.create(dbSession, organization.getUuid(), new QProfileName("xoo", "P1"));
     dbSession.commit();
     dbSession.clearCache();
     String key = dto.getKey();
@@ -192,8 +204,8 @@ public class QProfileFactoryMediumTest {
 
   @Test
   public void fail_renaming_if_name_already_exists() {
-    QualityProfileDto p1 = factory.create(dbSession, new QProfileName("xoo", "P1"));
-    QualityProfileDto p2 = factory.create(dbSession, new QProfileName("xoo", "P2"));
+    QualityProfileDto p1 = factory.create(dbSession, organization.getUuid(), new QProfileName("xoo", "P1"));
+    QualityProfileDto p2 = factory.create(dbSession, organization.getUuid(), new QProfileName("xoo", "P2"));
     dbSession.commit();
     dbSession.clearCache();
 
@@ -208,7 +220,7 @@ public class QProfileFactoryMediumTest {
   @Test
   public void delete() {
     initRules();
-    db.qualityProfileDao().insert(dbSession, QProfileTesting.newXooP1("org-123"));
+    db.qualityProfileDao().insert(dbSession, QProfileTesting.newXooP1(organization.getUuid()));
     tester.get(RuleActivator.class).activate(dbSession, new RuleActivation(RuleTesting.XOO_X1), XOO_P1_KEY);
     dbSession.commit();
     dbSession.clearCache();
