@@ -208,7 +208,7 @@ public class QProfilesWsTest {
     WebService.Action create = controller.action("create");
     assertThat(create).isNotNull();
     assertThat(create.isPost()).isTrue();
-    assertThat(create.params()).hasSize(4);
+    assertThat(create.params()).hasSize(5);
     assertThat(create.param("profileName")).isNotNull();
     assertThat(create.param("profileName").isRequired()).isTrue();
     assertThat(create.param("language").possibleValues()).containsOnly(xoo1Key, xoo2Key);
