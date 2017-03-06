@@ -28,11 +28,11 @@ import org.sonar.api.utils.log.Loggers;
 import org.sonar.ce.ComputeEngine;
 import org.sonar.ce.ComputeEngineImpl;
 import org.sonar.ce.container.ComputeEngineContainerImpl;
+import org.sonar.ce.log.CeProcessLogging;
 import org.sonar.process.MinimumViableSystem;
 import org.sonar.process.Monitored;
 import org.sonar.process.ProcessEntryPoint;
 import org.sonar.process.Props;
-import org.sonar.ce.log.CeProcessLogging;
 
 import static com.google.common.base.Preconditions.checkState;
 import static org.sonar.process.ProcessUtils.awaitTermination;
@@ -164,6 +164,9 @@ public class CeServer implements Monitored {
       try {
         startup();
         return true;
+      } catch (org.sonar.api.utils.MessageException | org.sonar.process.MessageException e) {
+        LOG.error("Compute Engine startup failed: " + e.getMessage());
+        return false;
       } catch (Throwable e) {
         LOG.error("Compute Engine startup failed", e);
         return false;
