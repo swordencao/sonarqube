@@ -23,6 +23,8 @@ import javax.annotation.Nullable;
 import org.sonar.api.resources.Languages;
 import org.sonar.api.server.ws.Request;
 import org.sonar.api.server.ws.WebService;
+import org.sonar.db.organization.OrganizationDto;
+import org.sonar.server.qualityprofile.ws.QProfileWsSupport;
 import org.sonar.server.util.LanguageParamUtils;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -43,14 +45,24 @@ public class QProfileRef {
   public static final String PARAM_PROFILE_NAME = "profileName";
   public static final String PARAM_PROFILE_KEY = "profileKey";
 
+  private final OrganizationDto organization;
   private final String key;
   private final String language;
   private final String name;
 
-  private QProfileRef(@Nullable String key, @Nullable String language, @Nullable String name) {
+  private QProfileRef(OrganizationDto organization, @Nullable String key, @Nullable String language, @Nullable String name) {
+    this.organization = organization;
     this.key = key;
     this.language = language;
     this.name = name;
+  }
+
+  /**
+   * @deprecated provide organization
+   */
+  @Deprecated
+  private QProfileRef(@Nullable String key, @Nullable String language, @Nullable String name) {
+    this(null, key, language, name);
   }
 
   /**
@@ -98,6 +110,9 @@ public class QProfileRef {
       return false;
     }
     QProfileRef that = (QProfileRef) o;
+    if (organization != null ? !organization.equals(that.organization) : (that.organization != null)) {
+      return false;
+    }
     if (key != null ? !key.equals(that.key) : (that.key != null)) {
       return false;
     }
@@ -110,7 +125,8 @@ public class QProfileRef {
 
   @Override
   public int hashCode() {
-    int result = key != null ? key.hashCode() : 0;
+    int result = organization != null ? organization.hashCode() : 0;
+    result = 31 * result + (key != null ? key.hashCode() : 0);
     result = 31 * result + (language != null ? language.hashCode() : 0);
     result = 31 * result + (name != null ? name.hashCode() : 0);
     return result;
@@ -140,6 +156,17 @@ public class QProfileRef {
     return new QProfileRef(null, requireNonNull(lang), requireNonNull(name));
   }
 
+  public static void defineParams(WebService.NewAction action, Languages languages, String organizationSince) {
+    QProfileWsSupport
+      .createOrganizationParam(action)
+      .setSince(organizationSince);
+    defineParams(action, languages);
+  }
+
+  /**
+   * @deprecated provide organization
+   */
+  @Deprecated
   public static void defineParams(WebService.NewAction action, Languages languages) {
     action.createParam(PARAM_PROFILE_KEY)
       .setDescription("A quality profile key. Either this parameter, or a combination of profileName + language must be set.")
