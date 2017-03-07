@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -190,7 +191,7 @@ public class RegisterQualityProfiles {
       RulesProfile profile = definition.createProfile(validation);
       validation.log(LOGGER);
       if (profile != null && !validation.hasErrors()) {
-        byLang.put(StringUtils.lowerCase(profile.getLanguage()), profile);
+        byLang.put(StringUtils.lowerCase(profile.getLanguage(), Locale.ENGLISH), profile);
       }
     }
     return byLang;
