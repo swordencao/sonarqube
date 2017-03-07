@@ -132,6 +132,7 @@ public class QProfileRef {
     return result;
   }
 
+  @Deprecated
   public static QProfileRef from(Request request) {
     String key = request.param(PARAM_PROFILE_KEY);
     String lang = request.param(PARAM_LANGUAGE);
@@ -139,6 +140,7 @@ public class QProfileRef {
     return from(key, lang, name);
   }
 
+  @Deprecated
   public static QProfileRef from(@Nullable String key, @Nullable String lang, @Nullable String name) {
     if (key != null) {
       checkArgument(isEmpty(lang) && isEmpty(name), "Either key or couple language/name must be set");
@@ -148,19 +150,54 @@ public class QProfileRef {
     return fromName(lang, name);
   }
 
+  @Deprecated
   public static QProfileRef fromKey(String key) {
     return new QProfileRef(requireNonNull(key), null, null);
   }
 
+  @Deprecated
   public static QProfileRef fromName(String lang, String name) {
     return new QProfileRef(null, requireNonNull(lang), requireNonNull(name));
+  }
+
+  public static QProfileRef from(OrganizationDto organization, Request request) {
+    String key = request.param(PARAM_PROFILE_KEY);
+    String lang = request.param(PARAM_LANGUAGE);
+    String name = request.param(PARAM_PROFILE_NAME);
+    return from(organization, key, lang, name);
+  }
+
+  public static QProfileRef from(OrganizationDto organization, @Nullable String key, @Nullable String lang, @Nullable String name) {
+    if (key != null) {
+      checkArgument(isEmpty(lang) && isEmpty(name), "Either key or couple language/name must be set");
+      return fromKey(organization, key);
+    }
+    checkArgument(!isEmpty(lang) && !isEmpty(name), "Both profile language and name must be set");
+    return fromName(organization, lang, name);
+  }
+
+  public static QProfileRef fromKey(OrganizationDto organization, String key) {
+    return new QProfileRef(organization, requireNonNull(key), null, null);
+  }
+
+  public static QProfileRef fromName(OrganizationDto organization, String lang, String name) {
+    return new QProfileRef(organization, null, requireNonNull(lang), requireNonNull(name));
   }
 
   public static void defineParams(WebService.NewAction action, Languages languages, String organizationSince) {
     QProfileWsSupport
       .createOrganizationParam(action)
       .setSince(organizationSince);
-    defineParams(action, languages);
+    action.createParam(PARAM_PROFILE_KEY)
+      .setDescription("A quality profile key. Either this parameter, or a combination of profileName + language must be set.")
+      .setExampleValue("sonar-way-java-12345");
+    action.createParam(PARAM_PROFILE_NAME)
+      .setDescription("A quality profile name. If this parameter is set, profileKey must not be set and language must be set to disambiguate.")
+      .setExampleValue("Sonar way");
+    action.createParam(PARAM_LANGUAGE)
+      .setDescription("A quality profile language. If this parameter is set, profileKey must not be set and profileName must be set to disambiguate.")
+      .setPossibleValues(LanguageParamUtils.getLanguageKeys(languages))
+      .setExampleValue("js");
   }
 
   /**
