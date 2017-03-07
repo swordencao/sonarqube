@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.sonar.core.util.UuidFactoryFast;
 import org.sonar.db.DbClient;
 import org.sonar.db.DbTester;
 import org.sonar.db.qualityprofile.QualityProfileDto;
@@ -65,7 +66,11 @@ public class SetDefaultActionTest {
     tester = new WsTester(new QProfilesWs(
       mock(RuleActivationActions.class),
       mock(BulkRuleActivationActions.class),
-      new SetDefaultAction(LanguageTesting.newLanguages(xoo1Key, xoo2Key), new QProfileLookup(dbClient), new QProfileFactory(dbClient), wsSupport)));
+      new SetDefaultAction(
+        LanguageTesting.newLanguages(xoo1Key, xoo2Key),
+        new QProfileLookup(dbClient),
+        new QProfileFactory(dbClient, UuidFactoryFast.getInstance()),
+        wsSupport)));
   }
 
   @Test

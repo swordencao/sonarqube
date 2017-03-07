@@ -27,6 +27,7 @@ import org.junit.rules.ExpectedException;
 import org.sonar.api.resources.Language;
 import org.sonar.api.resources.Languages;
 import org.sonar.api.utils.System2;
+import org.sonar.core.util.UuidFactoryFast;
 import org.sonar.db.DbClient;
 import org.sonar.db.DbSession;
 import org.sonar.db.DbTester;
@@ -77,7 +78,10 @@ public class DeleteActionTest {
     tester = new WsTester(new QProfilesWs(
       mock(RuleActivationActions.class),
       mock(BulkRuleActivationActions.class),
-      new DeleteAction(new Languages(xoo1, xoo2), new QProfileFactory(dbClient), dbClient,
+      new DeleteAction(
+        new Languages(xoo1, xoo2),
+        new QProfileFactory(dbClient, UuidFactoryFast.getInstance()),
+        dbClient,
         new QProfileWsSupport(dbClient, userSessionRule, defaultOrganizationProvider))));
   }
 
