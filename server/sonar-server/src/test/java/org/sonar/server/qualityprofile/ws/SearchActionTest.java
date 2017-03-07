@@ -47,6 +47,7 @@ import org.sonar.server.organization.TestDefaultOrganizationProvider;
 import org.sonar.server.qualityprofile.QProfileFactory;
 import org.sonar.server.qualityprofile.QProfileLookup;
 import org.sonar.server.qualityprofile.index.ActiveRuleIndex;
+import org.sonar.server.tester.UserSessionRule;
 import org.sonar.server.ws.TestRequest;
 import org.sonar.server.ws.WsActionTester;
 import org.sonarqube.ws.MediaTypes;
@@ -73,6 +74,8 @@ public class SearchActionTest {
   public ExpectedException expectedException = ExpectedException.none();
   @Rule
   public DbTester db = DbTester.create(System2.INSTANCE);
+  @Rule
+  public UserSessionRule userSession = UserSessionRule.standalone();
   QualityProfileDbTester qualityProfileDb = new QualityProfileDbTester(db);
   ComponentDbTester componentDb = new ComponentDbTester(db);
   DbClient dbClient = db.getDbClient();
@@ -81,6 +84,7 @@ public class SearchActionTest {
   private DefaultOrganizationProvider defaultOrganizationProvider = TestDefaultOrganizationProvider.from(db);
 
   private ActiveRuleIndex activeRuleIndex = mock(ActiveRuleIndex.class);
+  private QProfileWsSupport qProfileWsSupport = new QProfileWsSupport(dbClient, userSession, defaultOrganizationProvider);
 
   private Language xoo1;
   private Language xoo2;
@@ -99,7 +103,7 @@ public class SearchActionTest {
         new QProfileLookup(dbClient),
         new QProfileFactory(dbClient),
         dbClient,
-        new ComponentFinder(dbClient), activeRuleIndex),
+        new ComponentFinder(dbClient), activeRuleIndex, qProfileWsSupport),
       languages));
   }
 

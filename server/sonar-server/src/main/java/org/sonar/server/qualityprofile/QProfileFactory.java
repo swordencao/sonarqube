@@ -184,12 +184,12 @@ public class QProfileFactory {
     return db.qualityProfileDao().selectByProjectAndLanguage(session, projectKey, language);
   }
 
-  public List<QualityProfileDto> getByProjectAndLanguages(DbSession session, String projectKey, Set<String> languageKeys) {
-    return db.qualityProfileDao().selectByProjectAndLanguages(session, projectKey, languageKeys);
+  public List<QualityProfileDto> getByProjectAndLanguages(DbSession session, OrganizationDto organization, String projectKey, Set<String> languageKeys) {
+    return db.qualityProfileDao().selectByProjectAndLanguages(session, organization, projectKey, languageKeys);
   }
 
-  public List<QualityProfileDto> getByNameAndLanguages(DbSession session, String name, Collection<String> languages) {
-    return db.qualityProfileDao().selectByNameAndLanguages(name, languages, session);
+  public List<QualityProfileDto> getByNameAndLanguages(DbSession session, OrganizationDto organization, String name, Collection<String> languages) {
+    return db.qualityProfileDao().selectByNameAndLanguages(organization, name, languages, session);
   }
 
   private static void checkNotDefault(QualityProfileDto p) {

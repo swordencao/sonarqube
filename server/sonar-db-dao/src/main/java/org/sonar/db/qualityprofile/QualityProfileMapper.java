@@ -84,7 +84,8 @@ public interface QualityProfileMapper {
 
   QualityProfileDto selectByProjectAndLanguage(@Param("projectKey") String projectKey, @Param("language") String language);
 
-  List<QualityProfileDto> selectByProjectAndLanguages(@Param("projectKey") String projectKey, @Param("languages") List<String> input);
+  List<QualityProfileDto> selectByProjectAndLanguages(@Param("organizationUuid") String organizationUuid, @Param("projectKey") String projectKey,
+    @Param("languages") List<String> input);
 
   void insertProjectProfileAssociation(@Param("projectUuid") String projectUuid, @Param("profileKey") String profileKey);
 
