@@ -75,7 +75,7 @@ public class QProfileCopier {
       if (toProfile == null) {
         // Do not delegate creation to QProfileBackuper because we need to keep
         // the parent-child association, if exists.
-        toProfile = factory.create(dbSession, qProfileWsSupport.getDefaultOrganization(dbSession), toProfileName);
+        toProfile = factory.checkAndCreate(dbSession, qProfileWsSupport.getDefaultOrganization(dbSession), toProfileName);
         toProfile.setParentKee(fromProfile.getParentKee());
         db.qualityProfileDao().update(dbSession, toProfile);
         dbSession.commit();

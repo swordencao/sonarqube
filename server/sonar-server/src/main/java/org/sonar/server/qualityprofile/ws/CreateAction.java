@@ -117,7 +117,8 @@ public class CreateAction implements QProfileWsAction {
 
   private CreateWsResponse doHandle(DbSession dbSession, CreateRequest createRequest, Request request) {
     QProfileResult result = new QProfileResult();
-    QualityProfileDto profile = profileFactory.create(dbSession, qProfileWsSupport.getOrganizationByKey(dbSession, createRequest.getOrganizationKey()),
+    QualityProfileDto profile = profileFactory.checkAndCreate(dbSession,
+      qProfileWsSupport.getOrganizationByKey(dbSession, createRequest.getOrganizationKey()),
       QProfileName.createFor(createRequest.getLanguage(), createRequest.getProfileName()));
     result.setProfile(profile);
     for (ProfileImporter importer : importers) {
