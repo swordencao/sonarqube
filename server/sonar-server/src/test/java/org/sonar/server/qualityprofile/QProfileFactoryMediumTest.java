@@ -97,12 +97,7 @@ public class QProfileFactoryMediumTest {
 
     // reload the dto
     QualityProfileDto readDto = db.qualityProfileDao().selectByNameAndLanguage("P1", "xoo", dbSession);
-    assertThat(readDto.getOrganizationUuid()).isEqualTo(uuid);
-    assertThat(readDto.getName()).isEqualTo(writtenDto.getName());
-    assertThat(readDto.getKey()).startsWith(writtenDto.getKey());
-    assertThat(readDto.getLanguage()).isEqualTo(writtenDto.getLanguage());
-    assertThat(readDto.getId()).isEqualTo(writtenDto.getId());
-    assertThat(readDto.getParentKee()).isNull();
+    assertEqual(writtenDto, readDto);
 
     assertThat(db.qualityProfileDao().selectAll(dbSession)).hasSize(1);
   }
@@ -111,7 +106,7 @@ public class QProfileFactoryMediumTest {
   public void create() {
     String uuid = organization.getUuid();
 
-    QualityProfileDto writtenDto = factory.create(dbSession, organization, new QProfileName("xoo", "P1"));
+    QualityProfileDto writtenDto = factory.create(dbSession, organization, new QProfileName("xoo", "P1"), true);
     dbSession.commit();
     dbSession.clearCache();
     assertThat(writtenDto.getOrganizationUuid()).isEqualTo(uuid);
@@ -119,15 +114,12 @@ public class QProfileFactoryMediumTest {
     assertThat(writtenDto.getName()).isEqualTo("P1");
     assertThat(writtenDto.getLanguage()).isEqualTo("xoo");
     assertThat(writtenDto.getId()).isNotNull();
+    assertThat(writtenDto.getParentKee()).isNull();
+    assertThat(writtenDto.isDefault()).isTrue();
 
     // reload the dto
     QualityProfileDto readDto = db.qualityProfileDao().selectByNameAndLanguage("P1", "xoo", dbSession);
-    assertThat(readDto.getOrganizationUuid()).isEqualTo(uuid);
-    assertThat(readDto.getName()).isEqualTo(writtenDto.getName());
-    assertThat(readDto.getKey()).startsWith(writtenDto.getKey());
-    assertThat(readDto.getLanguage()).isEqualTo(writtenDto.getLanguage());
-    assertThat(readDto.getId()).isEqualTo(writtenDto.getId());
-    assertThat(readDto.getParentKee()).isNull();
+    assertEqual(writtenDto, readDto);
 
     assertThat(db.qualityProfileDao().selectAll(dbSession)).hasSize(1);
   }
@@ -168,7 +160,7 @@ public class QProfileFactoryMediumTest {
 
     expectBadRequestException("quality_profiles.profile_name_cant_be_blank");
 
-    factory.create(dbSession, organization, name);
+    factory.create(dbSession, organization, name, true);
   }
 
   @Test
@@ -177,17 +169,17 @@ public class QProfileFactoryMediumTest {
 
     expectBadRequestException("quality_profiles.profile_name_cant_be_blank");
 
-    factory.create(dbSession, organization, name);
+    factory.create(dbSession, organization, name, false);
   }
 
   @Test
   public void create_does_not_fail_if_already_exists() {
     QProfileName name = new QProfileName("xoo", "P1");
-    factory.create(dbSession, organization, name);
+    factory.create(dbSession, organization, name, true);
     dbSession.commit();
     dbSession.clearCache();
 
-    assertThat(factory.create(dbSession, organization, name)).isNotNull();
+    assertThat(factory.create(dbSession, organization, name, true)).isNotNull();
   }
 
   @Test
@@ -391,5 +383,15 @@ public class QProfileFactoryMediumTest {
   private void expectBadRequestException(String message) {
     thrown.expect(BadRequestException.class);
     thrown.expectMessage(message);
+  }
+
+  private static void assertEqual(QualityProfileDto writtenDto, QualityProfileDto readDto) {
+    assertThat(readDto.getOrganizationUuid()).isEqualTo(writtenDto.getOrganizationUuid());
+    assertThat(readDto.getName()).isEqualTo(writtenDto.getName());
+    assertThat(readDto.getKey()).startsWith(writtenDto.getKey());
+    assertThat(readDto.getLanguage()).isEqualTo(writtenDto.getLanguage());
+    assertThat(readDto.getId()).isEqualTo(writtenDto.getId());
+    assertThat(readDto.getParentKee()).isEqualTo(writtenDto.getParentKee());
+    assertThat(readDto.isDefault()).isEqualTo(writtenDto.isDefault());
   }
 }
