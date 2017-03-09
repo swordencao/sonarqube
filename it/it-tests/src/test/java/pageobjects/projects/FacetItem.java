@@ -38,4 +38,14 @@ public class FacetItem {
   public void selectValue(String key) {
     this.elt.$(".facet[data-key=\"" + key + "\"]").click();
   }
+
+  public FacetItem selectOptionItem(String value) {
+    this.elt.$(".Select-input input").val(value).pressEnter();
+    return this;
+  }
+
+  public FacetItem sortList(Integer idx) {
+    this.elt.$$(".projects-facet-sort a").get(idx).click();
+    return this;
+  }
 }
