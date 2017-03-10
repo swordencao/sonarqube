@@ -113,10 +113,10 @@ public class ProjectsPageTest {
   public void should_sort_by_facet() {
     ProjectsPage page = nav.openProjects();
     page.getFacetByProperty("duplications")
-      .sortList(0);
+      .sortListDesc();
     page.getProjectByIdx(0).shouldHaveMeasure("duplicated_lines_density", "63.7%");
     page.getFacetByProperty("duplications")
-      .sortList(1);
+      .sortListAsc();
     page.getProjectByIdx(0).shouldHaveMeasure("duplicated_lines_density", "0.0%");
   }
 

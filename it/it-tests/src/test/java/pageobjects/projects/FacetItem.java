@@ -20,7 +20,9 @@
 package pageobjects.projects;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.WebElement;
 
 public class FacetItem {
 
@@ -44,8 +46,23 @@ public class FacetItem {
     return this;
   }
 
-  public FacetItem sortList(Integer idx) {
-    this.elt.$$(".projects-facet-sort a").get(idx).click();
+  public FacetItem sortListDesc() {
+    this.getSortingButton("-").click();
     return this;
+  }
+
+  public FacetItem sortListAsc() {
+    this.getSortingButton("[a-zA-Z ]").click();
+    return this;
+  }
+
+  public SelenideElement getSortingButton(String selector) {
+    ElementsCollection buttons = this.elt.$$(".projects-facet-sort a");
+    return buttons.find(new Condition("AttributeMatch") {
+      @Override
+      public boolean apply(WebElement webElement) {
+        return webElement.getAttribute("href").matches(".*sort=" + selector + ".*");
+      }
+    });
   }
 }
