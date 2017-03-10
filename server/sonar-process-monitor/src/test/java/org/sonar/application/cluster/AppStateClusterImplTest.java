@@ -102,7 +102,7 @@ public class AppStateClusterImplTest {
     TestAppSettings settings = new TestAppSettings();
     settings.set(ProcessProperties.CLUSTER_ENABLED, "true");
     settings.set(ProcessProperties.CLUSTER_NAME, "sonarqube");
-    settings.set(ProcessProperties.CLUSTER_INTERFACES, InetAddress.getLoopbackAddress().getHostAddress());
+    settings.set(ProcessProperties.CLUSTER_NETWORK_INTERFACES, InetAddress.getLoopbackAddress().getHostAddress());
 
     Object lock = new Object();
     List<ProcessId> operationalProcesses = new ArrayList<>();
