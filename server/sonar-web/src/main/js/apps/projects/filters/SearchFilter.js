@@ -41,31 +41,31 @@ class SearchFilter extends React.PureComponent {
   props: Props;
   state: State;
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props);
     this.state = { userQuery: props.query };
     this.handleSearch = debounce(this.handleSearch.bind(this), 250);
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  componentWillReceiveProps(nextProps: Props) {
     if (this.props.query === this.state.userQuery && nextProps.query !== this.props.query) {
       this.setState({ userQuery: nextProps.query || '' });
     }
   }
 
-  handleSearch (userQuery) {
+  handleSearch(userQuery) {
     const path = getFilterUrl(this.props, { search: userQuery || null });
     this.props.router.push(path);
   }
 
-  handleQueryChange (userQuery) {
+  handleQueryChange(userQuery) {
     this.setState({ userQuery });
     if (!userQuery || userQuery.length >= 2) {
       this.handleSearch(userQuery);
     }
   }
 
-  render () {
+  render() {
     const { userQuery } = this.state;
     const inputClassName = classNames('input-super-large', {
       touched: userQuery && userQuery.length < 2
@@ -79,7 +79,8 @@ class SearchFilter extends React.PureComponent {
           className={inputClassName}
           placeholder={translate('projects.search')}
           onChange={event => this.handleQueryChange(event.target.value)}
-          autoComplete="off"/>
+          autoComplete="off"
+        />
         <span className="note spacer-left">
           {translateWithParameters('select2.tooShort', 2)}
         </span>

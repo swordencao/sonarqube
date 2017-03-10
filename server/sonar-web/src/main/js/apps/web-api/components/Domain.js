@@ -22,45 +22,43 @@ import Action from './Action';
 import InternalBadge from './InternalBadge';
 import { getActionKey } from '../utils';
 
-export default function Domain ({ domain, showInternal, showOnlyDeprecated, searchQuery }) {
+export default function Domain({ domain, showInternal, showOnlyDeprecated, searchQuery }) {
   const filteredActions = domain.actions
-      .filter(action => {
-        return showInternal || !action.internal;
-      })
-      .filter(action => {
-        return !showOnlyDeprecated || (showOnlyDeprecated && action.deprecatedSince);
-      })
-      .filter(action => {
-        const actionKey = getActionKey(domain.path, action.key);
-        return actionKey.indexOf(searchQuery) !== -1;
-      });
+    .filter(action => {
+      return showInternal || !action.internal;
+    })
+    .filter(action => {
+      return !showOnlyDeprecated || (showOnlyDeprecated && action.deprecatedSince);
+    })
+    .filter(action => {
+      const actionKey = getActionKey(domain.path, action.key);
+      return actionKey.indexOf(searchQuery) !== -1;
+    });
 
   return (
-      <div className="web-api-domain">
-        <header className="web-api-domain-header">
-          <h2 className="web-api-domain-title">{domain.path}</h2>
+    <div className="web-api-domain">
+      <header className="web-api-domain-header">
+        <h2 className="web-api-domain-title">{domain.path}</h2>
 
-          {domain.internal && (
-              <span className="spacer-left">
-                <InternalBadge/>
-              </span>
-          )}
-        </header>
+        {domain.internal &&
+          <span className="spacer-left">
+            <InternalBadge />
+          </span>}
+      </header>
 
-        {domain.description && (
-            <p className="web-api-domain-description">{domain.description}</p>
-        )}
+      {domain.description && <p className="web-api-domain-description">{domain.description}</p>}
 
-        <div className="web-api-domain-actions">
-          {filteredActions.map(action => (
-              <Action
-                  key={getActionKey(domain.path, action.key)}
-                  action={action}
-                  domain={domain}
-                  location={location}
-                  showInternal={showInternal}/>
-          ))}
-        </div>
+      <div className="web-api-domain-actions">
+        {filteredActions.map(action => (
+          <Action
+            key={getActionKey(domain.path, action.key)}
+            action={action}
+            domain={domain}
+            location={location}
+            showInternal={showInternal}
+          />
+        ))}
       </div>
+    </div>
   );
 }

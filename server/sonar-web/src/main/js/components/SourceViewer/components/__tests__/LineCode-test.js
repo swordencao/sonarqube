@@ -44,7 +44,8 @@ it('render code', () => {
       secondaryIssueLocationMessages={secondaryIssueLocationMessages}
       selectedIssue="issue-1"
       selectedIssueLocation={selectedIssueLocation}
-      showIssues={true}/>
+      showIssues={true}
+    />
   );
   expect(wrapper).toMatchSnapshot();
 });

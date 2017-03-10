@@ -23,7 +23,7 @@ import Level from '../../../components/ui/Level';
 
 export default class QualityGateFilter extends React.PureComponent {
   renderOption = (option, selected) => {
-    return <Level level={option} small={true} muted={!selected}/>;
+    return <Level level={option} small={true} muted={!selected} />;
   };
 
   getFacetValueForOption = (facet, option) => {
@@ -34,7 +34,7 @@ export default class QualityGateFilter extends React.PureComponent {
 
   renderName = () => 'Quality Gate';
 
-  render () {
+  render() {
     return (
       <FilterContainer
         property="gate"
@@ -44,7 +44,8 @@ export default class QualityGateFilter extends React.PureComponent {
         getFacetValueForOption={this.getFacetValueForOption}
         query={this.props.query}
         isFavorite={this.props.isFavorite}
-        organization={this.props.organization}/>
+        organization={this.props.organization}
+      />
     );
   }
 }

@@ -19,18 +19,19 @@
  */
 import { getJSON } from '../helpers/request';
 
-export function fetchWebApi (showInternal = true) {
+export function fetchWebApi(showInternal = true) {
   const url = '/api/webservices/list';
-  const data = { 'include_internals': showInternal };
+  const data = { include_internals: showInternal };
 
-  return getJSON(url, data).then(r => r.webServices.map(domain => {
-    const internal = !domain.actions.find(action => !action.internal);
+  return getJSON(url, data).then(r =>
+    r.webServices.map(domain => {
+      const internal = !domain.actions.find(action => !action.internal);
 
-    return { ...domain, internal };
-  }));
+      return { ...domain, internal };
+    }));
 }
 
-export function fetchResponseExample (domain, action) {
+export function fetchResponseExample(domain, action) {
   const url = '/api/webservices/response_example';
   const data = { controller: domain, action };
 

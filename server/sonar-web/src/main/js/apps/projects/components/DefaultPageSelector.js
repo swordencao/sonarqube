@@ -32,13 +32,13 @@ class DefaultPageSelector extends React.PureComponent {
     router: { replace: (path: string) => void }
   };
 
-  componentDidMount () {
+  componentDidMount() {
     if (shouldRedirectToFavorite(this.props.currentUser)) {
       this.props.router.replace('/projects/favorite');
     }
   }
 
-  render () {
+  render() {
     if (shouldRedirectToFavorite(this.props.currentUser)) {
       return null;
     } else {
@@ -46,7 +46,8 @@ class DefaultPageSelector extends React.PureComponent {
         <AllProjectsContainer
           isFavorite={false}
           location={this.props.location}
-          user={this.props.currentUser}/>
+          user={this.props.currentUser}
+        />
       );
     }
   }

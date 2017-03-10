@@ -24,46 +24,47 @@ import InternalBadge from './InternalBadge';
 import { TooltipsContainer } from '../../../components/mixins/tooltips-mixin';
 import { getActionKey, isDomainPathActive } from '../utils';
 
-export default function Menu ({ domains, showInternal, showOnlyDeprecated, searchQuery, splat }) {
+export default function Menu({ domains, showInternal, showOnlyDeprecated, searchQuery, splat }) {
   const filteredDomains = (domains || [])
-      .map(domain => {
-        const filteredActions = domain.actions
-            .filter(action => {
-              return showInternal || !action.internal;
-            })
-            .filter(action => {
-              return !showOnlyDeprecated || (showOnlyDeprecated && action.deprecatedSince);
-            })
-            .filter(action => {
-              const actionKey = getActionKey(domain.path, action.key);
-              return actionKey.indexOf(searchQuery) !== -1;
-            });
-        return { ...domain, filteredActions };
-      })
-      .filter(domain => domain.filteredActions.length);
+    .map(domain => {
+      const filteredActions = domain.actions
+        .filter(action => {
+          return showInternal || !action.internal;
+        })
+        .filter(action => {
+          return !showOnlyDeprecated || (showOnlyDeprecated && action.deprecatedSince);
+        })
+        .filter(action => {
+          const actionKey = getActionKey(domain.path, action.key);
+          return actionKey.indexOf(searchQuery) !== -1;
+        });
+      return { ...domain, filteredActions };
+    })
+    .filter(domain => domain.filteredActions.length);
 
   return (
-      <div className="api-documentation-results panel">
-        <TooltipsContainer>
-          <div className="list-group">
-            {filteredDomains.map(domain => (
-                <Link
-                    key={domain.path}
-                    className={classNames('list-group-item', { 'active': isDomainPathActive(domain.path, splat) })}
-                    to={'/web_api/' + domain.path}>
-                  <h3 className="list-group-item-heading">
-                    {domain.path}
-                    {domain.internal && (
-                        <InternalBadge/>
-                    )}
-                  </h3>
-                  <p className="list-group-item-text">
-                    {domain.description}
-                  </p>
-                </Link>
-            ))}
-          </div>
-        </TooltipsContainer>
-      </div>
+    <div className="api-documentation-results panel">
+      <TooltipsContainer>
+        <div className="list-group">
+          {filteredDomains.map(domain => (
+            <Link
+              key={domain.path}
+              className={classNames('list-group-item', {
+                active: isDomainPathActive(domain.path, splat)
+              })}
+              to={'/web_api/' + domain.path}
+            >
+              <h3 className="list-group-item-heading">
+                {domain.path}
+                {domain.internal && <InternalBadge />}
+              </h3>
+              <p className="list-group-item-text">
+                {domain.description}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </TooltipsContainer>
+    </div>
   );
 }

@@ -26,13 +26,10 @@ class LanguageFilterOption extends React.Component {
   static propTypes = {
     languageKey: React.PropTypes.string.isRequired,
     language: React.PropTypes.object
-  }
-
-  render () {
+  };
+  render() {
     const languageName = this.props.language ? this.props.language.name : this.props.languageKey;
-    return (
-      <span>{this.props.languageKey !== '<null>' ? languageName : translate('unknown')}</span>
-    );
+    return <span>{this.props.languageKey !== '<null>' ? languageName : translate('unknown')}</span>;
   }
 }
 

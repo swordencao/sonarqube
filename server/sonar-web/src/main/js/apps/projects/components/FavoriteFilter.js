@@ -23,7 +23,7 @@ import { translate } from '../../../helpers/l10n';
 import { saveAll } from '../utils';
 
 export default class FavoriteFilter extends React.Component {
-  render () {
+  render() {
     if (!this.props.user.isLoggedIn) {
       return null;
     }
@@ -43,7 +43,8 @@ export default class FavoriteFilter extends React.Component {
             id="favorite-projects"
             to={pathnameForFavorite}
             className="button"
-            activeClassName="button-active">
+            activeClassName="button-active"
+          >
             {translate('my_favorites')}
           </Link>
           <IndexLink
@@ -51,7 +52,8 @@ export default class FavoriteFilter extends React.Component {
             to={pathnameForAll}
             className="button"
             activeClassName="button-active"
-            onClick={saveAll}>
+            onClick={saveAll}
+          >
             {translate('all')}
           </IndexLink>
         </div>

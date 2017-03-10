@@ -34,15 +34,10 @@ export default class IssuesFilter extends React.PureComponent {
   renderOption = (option, selected, value) => {
     const isUnderSelectedOption = this.highlightUnder(value) && option > value;
     return (
-        <span>
-          <Rating
-              value={option}
-              small={true}
-              muted={!selected && !isUnderSelectedOption}/>
-          {option > 1 && option < 5 && (
-              <span className="note spacer-left">and worse</span>
-          )}
-        </span>
+      <span>
+        <Rating value={option} small={true} muted={!selected && !isUnderSelectedOption} />
+        {option > 1 && option < 5 && <span className="note spacer-left">and worse</span>}
+      </span>
     );
   };
 
@@ -52,11 +47,12 @@ export default class IssuesFilter extends React.PureComponent {
         property={this.props.property}
         query={this.props.query}
         isFavorite={this.props.isFavorite}
-        organization={this.props.organization}/>
+        organization={this.props.organization}
+      />
     );
   };
 
-  highlightUnder (option) {
+  highlightUnder(option) {
     return option !== null && option > 1;
   }
 
@@ -68,19 +64,20 @@ export default class IssuesFilter extends React.PureComponent {
 
   renderName = () => this.props.name;
 
-  render () {
+  render() {
     return (
-        <FilterContainer
-            property={this.props.property}
-            getOptions={this.getOptions}
-            renderName={this.renderName}
-            renderOption={this.renderOption}
-            renderSort={this.renderSort}
-            highlightUnder={this.highlightUnder}
-            getFacetValueForOption={this.getFacetValueForOption}
-            query={this.props.query}
-            isFavorite={this.props.isFavorite}
-            organization={this.props.organization}/>
+      <FilterContainer
+        property={this.props.property}
+        getOptions={this.getOptions}
+        renderName={this.renderName}
+        renderOption={this.renderOption}
+        renderSort={this.renderSort}
+        highlightUnder={this.highlightUnder}
+        getFacetValueForOption={this.getFacetValueForOption}
+        query={this.props.query}
+        isFavorite={this.props.isFavorite}
+        organization={this.props.organization}
+      />
     );
   }
 }

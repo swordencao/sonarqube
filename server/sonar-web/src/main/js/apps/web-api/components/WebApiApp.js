@@ -34,24 +34,24 @@ export default class WebApiApp extends React.Component {
     showOnlyDeprecated: false
   };
 
-  componentDidMount () {
+  componentDidMount() {
     this.mounted = true;
     this.scrollToAction = this.scrollToAction.bind(this);
     this.fetchList();
     document.getElementById('footer').classList.add('search-navigator-footer');
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     this.toggleInternalInitially();
     this.scrollToAction();
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.mounted = false;
     document.getElementById('footer').classList.remove('search-navigator-footer');
   }
 
-  fetchList (cb) {
+  fetchList(cb) {
     fetchWebApi().then(domains => {
       if (this.mounted) {
         this.setState({ domains }, cb);
@@ -59,12 +59,12 @@ export default class WebApiApp extends React.Component {
     });
   }
 
-  scrollToAction () {
+  scrollToAction() {
     const splat = this.props.params.splat || '';
     this.scrollToElement(splat);
   }
 
-  scrollToElement (id) {
+  scrollToElement(id) {
     const element = document.getElementById(id);
 
     if (element) {
@@ -77,7 +77,7 @@ export default class WebApiApp extends React.Component {
     }
   }
 
-  toggleInternalInitially () {
+  toggleInternalInitially() {
     const splat = this.props.params.splat || '';
     const { domains, showInternal } = this.state;
 
@@ -96,11 +96,11 @@ export default class WebApiApp extends React.Component {
     }
   }
 
-  handleSearch (searchQuery) {
+  handleSearch(searchQuery) {
     this.setState({ searchQuery });
   }
 
-  handleToggleInternal () {
+  handleToggleInternal() {
     const splat = this.props.params.splat || '';
     const { router } = this.context;
     const { domains } = this.state;
@@ -114,51 +114,53 @@ export default class WebApiApp extends React.Component {
     this.setState({ showInternal });
   }
 
-  handleToggleDeprecated () {
+  handleToggleDeprecated() {
     this.setState({ showOnlyDeprecated: !this.state.showOnlyDeprecated });
   }
 
-  render () {
+  render() {
     const splat = this.props.params.splat || '';
     const { domains, showInternal, showOnlyDeprecated, searchQuery } = this.state;
 
     const domain = domains.find(domain => isDomainPathActive(domain.path, splat));
 
     return (
-        <div className="search-navigator sticky">
-          <div className="search-navigator-side search-navigator-side-light" style={{ top: 30 }}>
-            <div className="web-api-page-header">
-              <Link to="/web_api/">
-                <h1>Web API</h1>
-              </Link>
-            </div>
-
-            <Search
-                showInternal={showInternal}
-                showOnlyDeprecated={showOnlyDeprecated}
-                onSearch={this.handleSearch.bind(this)}
-                onToggleInternal={this.handleToggleInternal.bind(this)}
-                onToggleDeprecated={this.handleToggleDeprecated.bind(this)}/>
-
-            <Menu
-                domains={this.state.domains}
-                showInternal={showInternal}
-                showOnlyDeprecated={showOnlyDeprecated}
-                searchQuery={searchQuery}
-                splat={splat}/>
+      <div className="search-navigator sticky">
+        <div className="search-navigator-side search-navigator-side-light" style={{ top: 30 }}>
+          <div className="web-api-page-header">
+            <Link to="/web_api/">
+              <h1>Web API</h1>
+            </Link>
           </div>
 
-          <div className="search-navigator-workspace">
-            {domain && (
-                <Domain
-                    key={domain.path}
-                    domain={domain}
-                    showInternal={showInternal}
-                    showOnlyDeprecated={showOnlyDeprecated}
-                    searchQuery={searchQuery}/>
-            )}
-          </div>
+          <Search
+            showInternal={showInternal}
+            showOnlyDeprecated={showOnlyDeprecated}
+            onSearch={this.handleSearch.bind(this)}
+            onToggleInternal={this.handleToggleInternal.bind(this)}
+            onToggleDeprecated={this.handleToggleDeprecated.bind(this)}
+          />
+
+          <Menu
+            domains={this.state.domains}
+            showInternal={showInternal}
+            showOnlyDeprecated={showOnlyDeprecated}
+            searchQuery={searchQuery}
+            splat={splat}
+          />
         </div>
+
+        <div className="search-navigator-workspace">
+          {domain &&
+            <Domain
+              key={domain.path}
+              domain={domain}
+              showInternal={showInternal}
+              showOnlyDeprecated={showOnlyDeprecated}
+              searchQuery={searchQuery}
+            />}
+        </div>
+      </div>
     );
   }
 }

@@ -20,7 +20,10 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Filter from './Filter';
-import { getProjectsAppFacetByProperty, getProjectsAppMaxFacetValue } from '../../../store/rootReducer';
+import {
+  getProjectsAppFacetByProperty,
+  getProjectsAppMaxFacetValue
+} from '../../../store/rootReducer';
 
 const mapStateToProps = (state, ownProps) => ({
   value: ownProps.query[ownProps.property],

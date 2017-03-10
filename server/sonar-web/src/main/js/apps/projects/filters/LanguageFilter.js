@@ -33,10 +33,10 @@ export default class LanguageFilter extends React.PureComponent {
   property = 'languages';
 
   renderOption = option => {
-    return <LanguageFilterOption languageKey={option}/>;
+    return <LanguageFilterOption languageKey={option} />;
   };
 
-  getSortedOptions (facet) {
+  getSortedOptions(facet) {
     return sortBy(Object.keys(facet), [option => -facet[option]]);
   }
 
@@ -45,7 +45,8 @@ export default class LanguageFilter extends React.PureComponent {
       property={this.property}
       query={this.props.query}
       isFavorite={this.props.isFavorite}
-      organization={this.props.organization}/>
+      organization={this.props.organization}
+    />
   );
 
   getFacetValueForOption = (facet, option) => facet[option];
@@ -54,7 +55,7 @@ export default class LanguageFilter extends React.PureComponent {
 
   renderName = () => 'Languages';
 
-  render () {
+  render() {
     return (
       <FilterContainer
         property={this.property}
@@ -65,7 +66,8 @@ export default class LanguageFilter extends React.PureComponent {
         getFacetValueForOption={this.getFacetValueForOption}
         query={this.props.query}
         isFavorite={this.props.isFavorite}
-        organization={this.props.organization}/>
+        organization={this.props.organization}
+      />
     );
   }
 }

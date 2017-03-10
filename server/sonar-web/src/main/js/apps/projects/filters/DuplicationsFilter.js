@@ -41,7 +41,8 @@ export default class DuplicationsFilter extends React.PureComponent {
         <DuplicationsRating
           value={getDuplicationsRatingAverageValue(option)}
           size="small"
-          muted={!selected}/>
+          muted={!selected}
+        />
         <span className="spacer-left">
           {getDuplicationsRatingLabel(option)}
         </span>
@@ -55,7 +56,8 @@ export default class DuplicationsFilter extends React.PureComponent {
         property={this.property}
         query={this.props.query}
         isFavorite={this.props.isFavorite}
-        organization={this.props.organization}/>
+        organization={this.props.organization}
+      />
     );
   };
 
@@ -68,7 +70,7 @@ export default class DuplicationsFilter extends React.PureComponent {
 
   renderName = () => 'Duplications';
 
-  render () {
+  render() {
     return (
       <FilterContainer
         property={this.property}
@@ -79,7 +81,8 @@ export default class DuplicationsFilter extends React.PureComponent {
         getFacetValueForOption={this.getFacetValueForOption}
         query={this.props.query}
         isFavorite={this.props.isFavorite}
-        organization={this.props.organization}/>
+        organization={this.props.organization}
+      />
     );
   }
 }

@@ -38,7 +38,8 @@ export default class CoverageFilter extends React.PureComponent {
         <CoverageRating
           value={getCoverageRatingAverageValue(option)}
           size="small"
-          muted={!selected}/>
+          muted={!selected}
+        />
         <span className="spacer-left">
           {getCoverageRatingLabel(option)}
         </span>
@@ -53,7 +54,8 @@ export default class CoverageFilter extends React.PureComponent {
         query={this.props.query}
         isFavorite={this.props.isFavorite}
         organization={this.props.organization}
-        sortDesc="right"/>
+        sortDesc="right"
+      />
     );
   };
 
@@ -66,7 +68,7 @@ export default class CoverageFilter extends React.PureComponent {
 
   renderName = () => 'Coverage';
 
-  render () {
+  render() {
     return (
       <FilterContainer
         property={this.property}
@@ -77,7 +79,8 @@ export default class CoverageFilter extends React.PureComponent {
         getFacetValueForOption={this.getFacetValueForOption}
         query={this.props.query}
         isFavorite={this.props.isFavorite}
-        organization={this.props.organization}/>
+        organization={this.props.organization}
+      />
     );
   }
 }

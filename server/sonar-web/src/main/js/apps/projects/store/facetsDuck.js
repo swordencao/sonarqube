@@ -33,9 +33,7 @@ const CUMULATIVE_FACETS = [
   'language'
 ];
 
-const REVERSED_FACETS = [
-  'coverage'
-];
+const REVERSED_FACETS = ['coverage'];
 
 const mapFacetValues = values => {
   const map = {};
@@ -63,9 +61,9 @@ const getFacetsMap = facets => {
     if (REVERSED_FACETS.includes(property)) {
       values.reverse();
     }
-    map[property] = CUMULATIVE_FACETS.includes(property) ?
-        cumulativeMapFacetValues(values) :
-        mapFacetValues(values);
+    map[property] = CUMULATIVE_FACETS.includes(property)
+      ? cumulativeMapFacetValues(values)
+      : mapFacetValues(values);
   });
   return map;
 };
@@ -78,9 +76,7 @@ const reducer = createMap(
 
 export default reducer;
 
-export const getFacetByProperty = (state, property) => (
-    state[property]
-);
+export const getFacetByProperty = (state, property) => state[property];
 
 export const getMaxFacetValue = state => {
   const allValues = flatMap(Object.values(state), facet => Object.values(facet));

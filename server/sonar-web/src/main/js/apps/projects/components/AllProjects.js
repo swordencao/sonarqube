@@ -35,7 +35,7 @@ export default class AllProjects extends React.Component {
     query: {}
   };
 
-  componentDidMount () {
+  componentDidMount() {
     // do not touch organization-level page
     if (!this.props.organization) {
       if (this.props.isFavorite) {
@@ -47,40 +47,43 @@ export default class AllProjects extends React.Component {
     this.handleQueryChange();
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     if (prevProps.location.query !== this.props.location.query) {
       this.handleQueryChange();
     }
   }
 
-  handleQueryChange () {
+  handleQueryChange() {
     const query = parseUrlQuery(this.props.location.query);
     this.setState({ query });
     this.props.fetchProjects(query, this.props.isFavorite, this.props.organization);
   }
 
-  render () {
+  render() {
     const isFiltered = Object.keys(this.state.query).some(key => this.state.query[key] != null);
 
     return (
-        <div className="page-with-sidebar page-with-left-sidebar projects-page">
-          <aside className="page-sidebar-fixed projects-sidebar">
-            <PageSidebar
-                query={this.state.query}
-                isFavorite={this.props.isFavorite}
-                organization={this.props.organization}/>
-          </aside>
-          <div className="page-main">
-            <ProjectsListContainer
-                isFavorite={this.props.isFavorite}
-                isFiltered={isFiltered}
-                organization={this.props.organization}/>
-            <ProjectsListFooterContainer
-                query={this.state.query}
-                isFavorite={this.props.isFavorite}
-                organization={this.props.organization}/>
-          </div>
+      <div className="page-with-sidebar page-with-left-sidebar projects-page">
+        <aside className="page-sidebar-fixed projects-sidebar">
+          <PageSidebar
+            query={this.state.query}
+            isFavorite={this.props.isFavorite}
+            organization={this.props.organization}
+          />
+        </aside>
+        <div className="page-main">
+          <ProjectsListContainer
+            isFavorite={this.props.isFavorite}
+            isFiltered={isFiltered}
+            organization={this.props.organization}
+          />
+          <ProjectsListFooterContainer
+            query={this.state.query}
+            isFavorite={this.props.isFavorite}
+            organization={this.props.organization}
+          />
         </div>
+      </div>
     );
   }
 }

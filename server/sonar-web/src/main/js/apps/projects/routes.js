@@ -25,7 +25,7 @@ import FavoriteProjectsContainer from './components/FavoriteProjectsContainer';
 
 export default (
   <Route component={App}>
-    <IndexRoute component={DefaultPageSelector}/>
-    <Route path="favorite" component={FavoriteProjectsContainer}/>
+    <IndexRoute component={DefaultPageSelector} />
+    <Route path="favorite" component={FavoriteProjectsContainer} />
   </Route>
 );

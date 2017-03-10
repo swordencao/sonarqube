@@ -21,9 +21,9 @@ import omitBy from 'lodash/omitBy';
 import isNil from 'lodash/isNil';
 
 export const getFilterUrl = (ownProps, part) => {
-  const basePathName = ownProps.organization ?
-      `/organizations/${ownProps.organization.key}/projects` :
-      '/projects';
+  const basePathName = ownProps.organization
+    ? `/organizations/${ownProps.organization.key}/projects`
+    : '/projects';
   const pathname = basePathName + (ownProps.isFavorite ? '/favorite' : '');
   const query = omitBy({ ...ownProps.query, ...part }, isNil);
   return { pathname, query };

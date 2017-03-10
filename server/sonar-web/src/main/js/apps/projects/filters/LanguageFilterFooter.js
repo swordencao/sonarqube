@@ -35,15 +35,13 @@ class LanguageFilterFooter extends React.Component {
     languages: React.PropTypes.object,
     value: React.PropTypes.any,
     facet: React.PropTypes.object
-  }
-
+  };
   handleLanguageChange = ({ value }) => {
     const urlOptions = (this.props.value || []).concat(value).join(',');
     const path = getFilterUrl(this.props, { [this.props.property]: urlOptions });
     this.props.router.push(path);
-  }
-
-  getOptions () {
+  };
+  getOptions() {
     const { languages, facet } = this.props;
     let options = Object.keys(languages);
     if (facet) {
@@ -52,15 +50,16 @@ class LanguageFilterFooter extends React.Component {
     return options.map(key => ({ label: languages[key].name, value: key }));
   }
 
-  render () {
+  render() {
     return (
       <Select
-          onChange={this.handleLanguageChange}
-          className="input-super-large"
-          options={this.getOptions()}
-          placeholder={translate('search_verb')}
-          clearable={false}
-          searchable={true}/>
+        onChange={this.handleLanguageChange}
+        className="input-super-large"
+        options={this.getOptions()}
+        placeholder={translate('search_verb')}
+        clearable={false}
+        searchable={true}
+      />
     );
   }
 }

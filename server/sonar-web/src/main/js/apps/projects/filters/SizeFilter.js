@@ -36,7 +36,7 @@ export default class SizeFilter extends React.PureComponent {
   renderOption = (option, selected) => {
     return (
       <span>
-        <SizeRating value={getSizeRatingAverageValue(option)} small={true} muted={!selected}/>
+        <SizeRating value={getSizeRatingAverageValue(option)} small={true} muted={!selected} />
         <span className="spacer-left">
           {getSizeRatingLabel(option)}
         </span>
@@ -52,7 +52,8 @@ export default class SizeFilter extends React.PureComponent {
         isFavorite={this.props.isFavorite}
         organization={this.props.organization}
         leftText={translate('biggest')}
-        rightText={translate('smallest')}/>
+        rightText={translate('smallest')}
+      />
     );
   };
 
@@ -71,7 +72,7 @@ export default class SizeFilter extends React.PureComponent {
 
   renderName = () => 'Size';
 
-  render () {
+  render() {
     return (
       <FilterContainer
         property={this.property}
@@ -82,7 +83,8 @@ export default class SizeFilter extends React.PureComponent {
         getFacetValueForOption={this.getFacetValueForOption}
         query={this.props.query}
         isFavorite={this.props.isFavorite}
-        organization={this.props.organization}/>
+        organization={this.props.organization}
+      />
     );
   }
 }
